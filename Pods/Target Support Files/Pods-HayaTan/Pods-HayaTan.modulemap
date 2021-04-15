@@ -1,0 +1,6 @@
+framework module Pods_HayaTan {
+  umbrella header "Pods-HayaTan-umbrella.h"
+
+  export *
+  module * { export * }
+}
