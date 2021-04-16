@@ -15,12 +15,6 @@
 		F030BC0726124C4200661C1C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F030BC0626124C4200661C1C /* Preview Assets.xcassets */; };
 		F030BC0A26124C4200661C1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F030BC0826124C4200661C1C /* LaunchScreen.storyboard */; };
 		F030BC1326124C9700661C1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F030BC1226124C9700661C1C /* GoogleService-Info.plist */; };
-		F06F77082628B3B1002D0594 /* unit1.json in Resources */ = {isa = PBXBuildFile; fileRef = F06F77072628B3B1002D0594 /* unit1.json */; };
-		F06F770C2628B3CD002D0594 /* unit0.json in Resources */ = {isa = PBXBuildFile; fileRef = F06F770B2628B3CD002D0594 /* unit0.json */; };
-		F096754E26275E6E0034AFC2 /* unit2.json in Resources */ = {isa = PBXBuildFile; fileRef = F096754A26275E6D0034AFC2 /* unit2.json */; };
-		F096754F26275E6E0034AFC2 /* unit4.json in Resources */ = {isa = PBXBuildFile; fileRef = F096754B26275E6E0034AFC2 /* unit4.json */; };
-		F096755026275E6E0034AFC2 /* unit5.json in Resources */ = {isa = PBXBuildFile; fileRef = F096754C26275E6E0034AFC2 /* unit5.json */; };
-		F096755126275E6E0034AFC2 /* unit3.json in Resources */ = {isa = PBXBuildFile; fileRef = F096754D26275E6E0034AFC2 /* unit3.json */; };
 		F0E1DE3E2613F75100C6D504 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE3D2613F75100C6D504 /* Unit.swift */; };
 		F0E1DE45261400A600C6D504 /* UnitHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE44261400A600C6D504 /* UnitHome.swift */; };
 		F0E1DE482614EFCB00C6D504 /* MultipleQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */; };
@@ -43,12 +37,6 @@
 		F030BC0926124C4200661C1C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F030BC0B26124C4200661C1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F030BC1226124C9700661C1C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		F06F77072628B3B1002D0594 /* unit1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit1.json; sourceTree = "<group>"; };
-		F06F770B2628B3CD002D0594 /* unit0.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit0.json; sourceTree = "<group>"; };
-		F096754A26275E6D0034AFC2 /* unit2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit2.json; sourceTree = "<group>"; };
-		F096754B26275E6E0034AFC2 /* unit4.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit4.json; sourceTree = "<group>"; };
-		F096754C26275E6E0034AFC2 /* unit5.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit5.json; sourceTree = "<group>"; };
-		F096754D26275E6E0034AFC2 /* unit3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = unit3.json; sourceTree = "<group>"; };
 		F0E1DE3D2613F75100C6D504 /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		F0E1DE44261400A600C6D504 /* UnitHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitHome.swift; sourceTree = "<group>"; };
 		F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleQ.swift; sourceTree = "<group>"; };
@@ -90,12 +78,6 @@
 		F030BBF126124C4100661C1C = {
 			isa = PBXGroup;
 			children = (
-				F06F770B2628B3CD002D0594 /* unit0.json */,
-				F06F77072628B3B1002D0594 /* unit1.json */,
-				F096754A26275E6D0034AFC2 /* unit2.json */,
-				F096754D26275E6E0034AFC2 /* unit3.json */,
-				F096754B26275E6E0034AFC2 /* unit4.json */,
-				F096754C26275E6E0034AFC2 /* unit5.json */,
 				F030BBFC26124C4100661C1C /* HayaTan */,
 				F030BBFB26124C4100661C1C /* Products */,
 				C87BC8D997442954D63CA147 /* Pods */,
@@ -153,6 +135,7 @@
 				F030BBF726124C4100661C1C /* Frameworks */,
 				F030BBF826124C4100661C1C /* Resources */,
 				183E7EA9EEF075ECE736EBBE /* [CP] Embed Pods Frameworks */,
+				39EA96F7C6BA7E5C51215331 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -200,15 +183,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F096755026275E6E0034AFC2 /* unit5.json in Resources */,
-				F06F77082628B3B1002D0594 /* unit1.json in Resources */,
 				F030BC0A26124C4200661C1C /* LaunchScreen.storyboard in Resources */,
 				F030BC1326124C9700661C1C /* GoogleService-Info.plist in Resources */,
-				F096754F26275E6E0034AFC2 /* unit4.json in Resources */,
 				F030BC0726124C4200661C1C /* Preview Assets.xcassets in Resources */,
-				F06F770C2628B3CD002D0594 /* unit0.json in Resources */,
-				F096755126275E6E0034AFC2 /* unit3.json in Resources */,
-				F096754E26275E6E0034AFC2 /* unit2.json in Resources */,
 				F030BC0426124C4200661C1C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -231,6 +208,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HayaTan/Pods-HayaTan-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		39EA96F7C6BA7E5C51215331 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HayaTan/Pods-HayaTan-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HayaTan/Pods-HayaTan-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HayaTan/Pods-HayaTan-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7403811A7D57095BB2A34E8F /* [CP] Check Pods Manifest.lock */ = {
@@ -326,6 +320,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;

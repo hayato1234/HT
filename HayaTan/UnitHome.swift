@@ -12,17 +12,25 @@ struct UnitHome: View {
     @State var isShowingMult = false
     @State private var langSelect = 0
     @State var currentWord = 0
+    var currentVocabs: [Vocab]
+    var sortedByNumVocabs: [Vocab]
     var unitTitle: String
     var unit: Int
     var vocabRepo:VocabRepo
     
     var language = ["EN -> JP","JP -> EN"]
-    
-    var body: some View {
-        let currentVocabs = vocabRepo.units[unit].vocabData.shuffled()
-        let sortedByNumVocabs = currentVocabs.sorted(by: {
+
+    init(_ unitTitle: String, _ unit: Int, _ vocabRepo: VocabRepo) {
+        self.unitTitle = unitTitle
+        self.unit = unit
+        self.vocabRepo = vocabRepo
+        currentVocabs = vocabRepo.units[unit].vocabData.shuffled()
+        sortedByNumVocabs = currentVocabs.sorted(by: {
             $0.number < $1.number
         })
+    }
+    
+    var body: some View {
         if currentVocabs.count == 0 {
             Text("No data found")
             
@@ -58,6 +66,7 @@ struct UnitHome: View {
                             Text(currentVocabs[currentWord].word).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             Image(systemName: "chevron.forward")
                         }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
+                            print(currentVocabs[0].word+", "+currentVocabs[1].word+", "+currentVocabs[2].word)
                             currentWord+=1
                         }
                     }

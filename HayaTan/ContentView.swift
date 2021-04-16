@@ -15,7 +15,7 @@ struct ContentView: View {
         NavigationView{
             List(vocabRepo.units, id:\.id){ (unit) in
                 NavigationLink(
-                    destination: UnitHome(unitTitle: unit.unitName, unit: unit.id, vocabRepo: vocabRepo),
+                    destination: UnitHome(unit.unitName, unit.id, vocabRepo),
                     label: {
                         Text(unit.unitName)
                     })
