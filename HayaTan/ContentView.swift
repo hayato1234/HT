@@ -6,11 +6,32 @@
 //
 
 import SwiftUI
+import Firebase
+import GoogleSignIn
 
 struct ContentView: View {
-    
-    @ObservedObject var vocabRepo:VocabRepo = VocabRepo()
        
+    @State var user = Auth.auth().currentUser
+    
+    var body: some View {
+
+        VStack{
+            if user != nil {
+                HomeScreen()
+            }else{
+                LoginScreen()
+            }
+        }.onAppear(perform: {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name("SIGNIN"), object: nil, queue: .main) { (_) in
+                self.user = Auth.auth().currentUser
+            }
+        })
+    }
+}
+
+struct HomeScreen: View {
+    @ObservedObject var vocabRepo:VocabRepo = VocabRepo()
+    
     var body: some View {
         NavigationView{
             List(vocabRepo.units, id:\.id){ (unit) in
@@ -20,10 +41,31 @@ struct ContentView: View {
                         Text(unit.unitName)
                     })
             }.navigationTitle("Choose a unit")
+            .navigationBarItems(trailing: Button(action: {signout()}, label: {
+                Text("signout")
+            }))
         }.navigationViewStyle(StackNavigationViewStyle())
         
-        
     }
+}
+
+struct LoginScreen: View {
+    var body: some View {
+        Button(action: {GIDSignIn.sharedInstance()?.presentingViewController = UIApplication.shared.windows.first?.rootViewController
+                GIDSignIn.sharedInstance()?.signIn()}, label: {
+            Image("btn_google_signin_dark_normal_web-1")
+        })
+    }
+}
+
+func signout() {
+    GIDSignIn.sharedInstance()?.signOut()
+    do{
+        try Auth.auth().signOut()
+    } catch let signOutError as NSError {
+        print ("Error signing out: %@", signOutError)
+    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
