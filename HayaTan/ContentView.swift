@@ -14,18 +14,18 @@ struct ContentView: View {
     @State var user = Auth.auth().currentUser
     
     var body: some View {
-
-        VStack{
-            if user != nil {
-                HomeScreen()
-            }else{
-                LoginScreen()
-            }
-        }.onAppear(perform: {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name("SIGNIN"), object: nil, queue: .main) { (_) in
-                self.user = Auth.auth().currentUser
-            }
-        })
+        HomeScreen()
+//        VStack{
+//            if user != nil {
+//                HomeScreen()
+//            }else{
+//                LoginScreen()
+//            }
+//        }.onAppear(perform: {
+//            NotificationCenter.default.addObserver(forName: NSNotification.Name("SIGNIN"), object: nil, queue: .main) { (_) in
+//                self.user = Auth.auth().currentUser
+//            }
+//        })
     }
 }
 

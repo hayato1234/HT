@@ -44,9 +44,10 @@ struct UnitHome: View {
                         if currentWord == 0 {
                             HStack{
                                 //Image(systemName: "chevron.backward")
-                                Text("         ").font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                //Image(systemName: "circle")
-                            }
+                                
+                                Text(unitTitle).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                Image(systemName: "circle").background(Color.white).clipShape(Circle())
+                            }.background(Color.yellow).offset(x: 20, y: 0)
                         }else{
                             HStack{
                                 Image(systemName: "chevron.backward")
@@ -58,17 +59,18 @@ struct UnitHome: View {
                             }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
                                 //print()
                                 currentWord-=1
-                            }
+                            }.offset(x: 20, y: 0)
                         }
+                        Image(systemName: "circle").resizable().frame(width: 30, height: 25)
                         HStack{
                             Image(systemName: "circle")
                             
                             Text(currentVocabs[currentWord].word).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             Image(systemName: "chevron.forward")
                         }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
-                            print(currentVocabs[0].word+", "+currentVocabs[1].word+", "+currentVocabs[2].word)
+                            //print(currentVocabs[0].word+", "+currentVocabs[1].word+", "+currentVocabs[2].word)
                             currentWord+=1
-                        }
+                        }.offset(x: -20, y: 0)
                     }
                     Picker("",selection: $langSelect){
                         ForEach(0 ..< language.count){
