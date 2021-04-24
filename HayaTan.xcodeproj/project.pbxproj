@@ -22,6 +22,7 @@
 		F0E1DE4E26155D3600C6D504 /* Vocab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE4D26155D3600C6D504 /* Vocab.swift */; };
 		F0E1DE542617E82800C6D504 /* ResultPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE532617E82800C6D504 /* ResultPage.swift */; };
 		F0E1DE572617E84300C6D504 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE562617E84300C6D504 /* Result.swift */; };
+		F0F2CA1A2633328D0058C651 /* VocabLocalData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F0F2CA182633328D0058C651 /* VocabLocalData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		F0E1DE4D26155D3600C6D504 /* Vocab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vocab.swift; sourceTree = "<group>"; };
 		F0E1DE532617E82800C6D504 /* ResultPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultPage.swift; sourceTree = "<group>"; };
 		F0E1DE562617E84300C6D504 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		F0F2CA192633328D0058C651 /* VocabDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VocabDB.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				F030BBFF26124C4100661C1C /* SceneDelegate.swift */,
 				F030BC0126124C4100661C1C /* ContentView.swift */,
 				F0E1DE44261400A600C6D504 /* UnitHome.swift */,
+				F0F2CA182633328D0058C651 /* VocabLocalData.xcdatamodeld */,
 				F0E1DE4D26155D3600C6D504 /* Vocab.swift */,
 				F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */,
 				F0E1DE3D2613F75100C6D504 /* Unit.swift */,
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0F2CA1A2633328D0058C651 /* VocabLocalData.xcdatamodeld in Sources */,
 				F030BBFE26124C4100661C1C /* AppDelegate.swift in Sources */,
 				F0E1DE4E26155D3600C6D504 /* Vocab.swift in Sources */,
 				F0E1DE3E2613F75100C6D504 /* Unit.swift in Sources */,
@@ -466,6 +470,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F0F2CA182633328D0058C651 /* VocabLocalData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F0F2CA192633328D0058C651 /* VocabDB.xcdatamodel */,
+			);
+			currentVersion = F0F2CA192633328D0058C651 /* VocabDB.xcdatamodel */;
+			path = VocabLocalData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F030BBF226124C4100661C1C /* Project object */;
 }

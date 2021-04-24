@@ -45,7 +45,7 @@ struct UnitHome: View {
                             HStack{
                                 //Image(systemName: "chevron.backward")
                                 
-                                Text(unitTitle).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                Text(unitTitle).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: .center)
                                 Image(systemName: "circle").background(Color.white).clipShape(Circle())
                             }.background(Color.yellow).offset(x: 20, y: 0)
                         }else{

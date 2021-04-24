@@ -20,6 +20,7 @@ class VocabRepo: ObservableObject {
     var vocabs4: [Vocab] = []
     var vocabs5: [Vocab] = []
     
+    
     init() {
         units = [
             Unit(id: 0, unitName: "Unit 0", dbName: "super_vocabs_0",vocabData: vocabs0),
@@ -126,59 +127,168 @@ class VocabRepo: ObservableObject {
     
     private func loadAll(){
         
-        //let vocabLists = [ self.vocabs0, self.vocabs1, self.vocabs2, self.vocabs3, self.vocabs4, self.vocabs5]
-        for i in 0..<6 {
-            db.collection(units[i].dbName).getDocuments{ (snapshot, error) in
-                if let error = error{
-                    print(error)
-                    return
-                }
-                guard let documents = snapshot?.documents else {print("error at snapshot");return}
-                self.units[i].vocabData = documents.compactMap{document in
-                    let data = document.data()
-                    //print(data)
-                    guard let unit = data["unit"] as? Int,
-                          let number = data["number"] as? Int,
-                          let word = data["word"] as? String,
-                          let parts = data["parts"] as? String,
-                          let noun = data["noun"] as? String,
-                          let itverb = data["itverb"] as? String,
-                          let tverb = data["tverb"] as? String,
-                          let adj = data["adj"] as? String,
-                          let adv = data["adv"] as? String,
-                          let prep = data["prep"] as? String,
-                          let conn = data["conn"] as? String else {return nil}
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+            if let vocabCoreData = try? context.fetch(VocabCD.fetchRequest()) {
+                if let vocabs = vocabCoreData as? [VocabCD]{
+                    if vocabs.count == 0 {
+                        // load from Firebase
+                        for i in 0..<6 {
+                            db.collection(units[i].dbName).getDocuments{ (snapshot, error) in
+                                if let error = error{
+                                    print(error)
+                                    return
+                                }
+                                guard let documents = snapshot?.documents else {print("error at snapshot");return}
+                                self.units[i].vocabData = documents.compactMap{document in
+                                    let data = document.data()
+                                    //print(data)
+
+                                    let vocabToSave = VocabCD(context: context)
+//                                    if let id = data["id"] as? String{
+//                                        vocabToSave.id = id
+//                                    }
+                                    vocabToSave.id = document.documentID
+                                    if let unit = data["unit"] as? Int16{
+                                        vocabToSave.unit = unit
+                                    }
+                                    if let number = data["number"] as? Int16 {
+                                        vocabToSave.number = number
+                                    }
+                                    if let word = data["word"] as? String{
+                                        vocabToSave.word = word
+                                    }
+                                    if let parts = data["parts"] as? String{
+                                        vocabToSave.parts = parts
+                                    }
+                                    if let noun = data["noun"] as? String{
+                                        vocabToSave.noun = noun
+                                    }
+                                    if let itverb = data["itverb"] as? String{
+                                        vocabToSave.itverb = itverb
+                                    }
+                                    if let tverb = data["tverb"] as? String{
+                                        vocabToSave.tverb = tverb
+                                    }
+                                    if let adj = data["adj"] as? String {
+                                        vocabToSave.adj = adj
+                                    }
+                                    if let adv = data["adv"] as? String {
+                                        vocabToSave.adv = adv
+                                    }
+                                    if let prep = data["prep"] as? String {
+                                        vocabToSave.prep = prep
+                                    }
+                                    if let conn = data["conn"] as? String {
+                                        vocabToSave.conn = conn
+                                    }
+                                    (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+                                    guard let unit = data["unit"] as? Int,
+                                          let number = data["number"] as? Int,
+                                          let word = data["word"] as? String,
+                                          let parts = data["parts"] as? String,
+                                          let noun = data["noun"] as? String,
+                                          let itverb = data["itverb"] as? String,
+                                          let tverb = data["tverb"] as? String,
+                                          let adj = data["adj"] as? String,
+                                          let adv = data["adv"] as? String,
+                                          let prep = data["prep"] as? String,
+                                          let conn = data["conn"] as? String else {return nil}
+                                    return Vocab(id: document.documentID, unit: unit, number: number, word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn)
+                                }
+                            }
+                        }
+                    }else{
+                        //load from Core Data
+                        if let vocabCoreData = try? context.fetch(VocabCD.fetchRequest()) {
+                            if let vocabs = vocabCoreData as? [VocabCD] {
+                                
+//                                deleteAllData(vocabs: vocabs)
+                                //print("repo-loadall: delete complete \(vocabs[0].id)")
+                                //print("repo-loadall: delete complete \(vocabs.count)")
+                                for unitNum in 0..<units.count {
+                                    //print("repo loadall: \(vocabTypeConverter(v: vocabs[0])?.word) ")
+                                    let vocabInUnit = vocabs.filter{
+                                        $0.unit == unitNum
+                                    }
+                                    for vocab in vocabInUnit {
+                                        if let conVocav = vocabTypeConverter(v: vocab){
+                                            self.units[unitNum].vocabData.append(conVocav)
+                                        }
+                                    }
+                                }
+                            }else{
+                                print("repo loadall: not possible")
+                            }
+                        }
+                        
+                    }
                     
-                    return Vocab(id: document.documentID, unit: unit, number: number, word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn)
                 }
             }
         }
-        
-//        db.collection(units[0].dbName).getDocuments{ (snapshot, error) in
-//            if let error = error{
-//                print(error)
-//                return
-//            }
-//            guard let documents = snapshot?.documents else {print("error at snapshot");return}
-//            self.vocabs0 = documents.compactMap{document in
-//                let data = document.data()
-//                //print(data)
-//                guard let unit = data["unit"] as? Int,
-//                      let number = data["number"] as? Int,
-//                      let word = data["word"] as? String,
-//                      let parts = data["parts"] as? String,
-//                      let noun = data["noun"] as? String,
-//                      let itverb = data["itverb"] as? String,
-//                      let tverb = data["tverb"] as? String,
-//                      let adj = data["adj"] as? String,
-//                      let adv = data["adv"] as? String,
-//                      let prep = data["prep"] as? String,
-//                      let conn = data["conn"] as? String else {return nil}
-//
-//                return Vocab(id: document.documentID, unit: unit, number: number, word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn)
-//            }
-//        }
-        
-        //print(vocabs[0])
     }
+    
+    func deleteAllData(vocabs: [VocabCD]) {
+        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext{
+            for vcb in vocabs {
+                context.delete(vcb)
+                (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
+            }
+            print("repo-loadall: delete complete \(vocabs.count)")
+        }
+    }
+    
+    func vocabTypeConverter(v: VocabCD) -> Vocab? {
+        
+        //return Vocab(id: "", unit: 1, number: 1, word: "word", parts: "parts", noun: "noun", itverb: "itverb", tverb: "tverb", adj: "adj", adv: "adv", prep: "prep", conn: "conn")
+//        if let id = v.id,
+//           let word = v.word,
+//           let parts = v.parts{
+//            return Vocab(id: id, unit: Int(v.unit), number: Int(v.number), word: word, parts: parts, noun: "noun", itverb: "itverb", tverb: "tverb", adj: "adj", adv: "adv", prep: "prep", conn: "conn")
+//        }
+        if let id = v.id,
+           let word = v.word,
+           let parts = v.parts,
+           let noun = v.noun,
+           let itverb = v.itverb,
+           let tverb = v.tverb,
+           let adj = v.adj,
+           let adv = v.adv,
+           let prep = v.prep,
+           let conn = v.conn{
+            return Vocab(id: id, unit: Int(v.unit), number: Int(v.number), word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn)
+        }
+        return nil
+    }
+    
+    
+    func vocabTypesConverter(vs: [VocabCD]) -> [Vocab] {
+        var vocabs:[Vocab] = []
+        
+        for v in vs {
+            if let id = v.id,
+               let word = v.word,
+               let parts = v.parts,
+               let noun = v.noun,
+               let itverb = v.itverb,
+               let tverb = v.tverb,
+               let adj = v.adj,
+               let adv = v.adv,
+               let prep = v.prep,
+               let conn = v.conn{
+                vocabs.append(Vocab(id: id, unit: Int(v.unit), number: Int(v.number), word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn))
+            }
+        }
+        return vocabs
+    }
+    
+//    func saveToCoreData() {
+//        //if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+//        //let newVocab = VocabCD(context: context)
+//
+//        if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
+//            let <#name#> = <#value#>
+//
+//        }
+//    }
 }
