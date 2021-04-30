@@ -132,6 +132,7 @@ class VocabRepo: ObservableObject {
                 if let vocabs = vocabCoreData as? [VocabCD]{
                     if vocabs.count == 0 {
                         // load from Firebase
+                        print("Repo: loading from Firebase")
                         for i in 0..<6 {
                             db.collection(units[i].dbName).getDocuments{ (snapshot, error) in
                                 if let error = error{
@@ -199,6 +200,7 @@ class VocabRepo: ObservableObject {
                         }
                     }else{
                         //load from Core Data
+                        print("Repo: loading from Core Data")
                         if let vocabCoreData = try? context.fetch(VocabCD.fetchRequest()) {
                             if let vocabs = vocabCoreData as? [VocabCD] {
                                 

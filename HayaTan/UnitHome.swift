@@ -18,7 +18,7 @@ struct UnitHome: View {
     var unit: Int
     var vocabRepo:VocabRepo
     
-    var language = ["EN -> JP","JP -> EN"]
+    var language = ["EN -> 日","日 -> EN"]
 
     init(_ unitTitle: String, _ unit: Int, _ vocabRepo: VocabRepo) {
         self.unitTitle = unitTitle
@@ -52,8 +52,13 @@ struct UnitHome: View {
                             HStack{
                                 Image(systemName: "chevron.backward")
                                 VStack{
-                                    Text(currentVocabs[currentWord-1].word)
-                                    Text(vocabRepo.getYaku(word: currentVocabs[currentWord-1], unitNum: unit)).font(.system(size: 20)).fontWeight(.bold)
+                                    if langSelect == 0{
+                                        Text(currentVocabs[currentWord-1].word)
+                                        Text(vocabRepo.getYaku(word: currentVocabs[currentWord-1], unitNum: unit)).font(.system(size: 20)).fontWeight(.bold)
+                                    }else{
+                                        Text(currentVocabs[currentWord-1].word).font(.system(size: 20)).fontWeight(.bold)
+                                        Text(vocabRepo.getYaku(word: currentVocabs[currentWord-1], unitNum: unit))
+                                    }
                                 }.frame(width: 300, height: 300)
                                 Image(systemName: "circle")
                             }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
@@ -64,8 +69,12 @@ struct UnitHome: View {
                         Image(systemName: "circle").resizable().frame(width: 30, height: 25)
                         HStack{
                             Image(systemName: "circle")
+                            if langSelect == 0{
+                                Text(currentVocabs[currentWord].word).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }else{
+                                Text(vocabRepo.getYaku(word: currentVocabs[currentWord], unitNum: unit)).font(.system(size: 25)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
                             
-                            Text(currentVocabs[currentWord].word).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             Image(systemName: "chevron.forward")
                         }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
                             //print(currentVocabs[0].word+", "+currentVocabs[1].word+", "+currentVocabs[2].word)
@@ -76,7 +85,9 @@ struct UnitHome: View {
                         ForEach(0 ..< language.count){
                             Text(self.language[$0])
                         }
-                    }.pickerStyle(SegmentedPickerStyle()).padding()
+                    }.pickerStyle(SegmentedPickerStyle()).frame(width: 200).padding()
+                    
+                    Text(String(langSelect))
                     
                     HStack{
                         Button(action: {isShowingMult.toggle()}, label: {
