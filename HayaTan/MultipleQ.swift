@@ -14,6 +14,7 @@ struct MultipleQ: View {
     @State var results:[Result] = []
     @State var randomizedVocabs:[Vocab] = []
     @State var questionNumber = 0
+    @State var totalQNum = 20
     var vocabRepo: VocabRepo
     var unit: Int
     
@@ -25,14 +26,21 @@ struct MultipleQ: View {
             VStack{
                 if let randVocabs = currentVocabs.shuffled(){
                     if let answerVocab = randVocabs[questionNumber]{
-                        //var answerWord: String = answerVocab.word
-                        Text(answerVocab.word).padding(.all, 100)
+                        HStack{
+                            Spacer()
+                            Text("\(questionNumber+1)/\(totalQNum)").padding()
+                        }
+                        
+                        //making question
+                        Text("Q\(questionNumber+1) : \(answerVocab.word)").padding(.all, 100)
                             .navigationBarTitle("選択クイズ", displayMode: .inline)
                             .navigationBarItems(leading: Button{
                                 isShowingMult = false
                             } label: {
                                 Image(systemName: "arrow.backward").font(.headline)
                             }, trailing: Button{
+                                // showing when check button clicked
+                                saveWrongVocabs(results: results)
                                 isShowingResult.toggle()
                             } label: {
                                 Image(systemName: "checkmark").font(.headline)
@@ -41,6 +49,7 @@ struct MultipleQ: View {
                                 ResultPage(isShowingResult: $isShowingResult, results: results)
                             }
                         
+                        //making choices and handling choice selction
                         if let choiceData = getChoices(choicesTotal: choiceNumber, correctVocab: answerVocab, vocabList: currentVocabs){
                             let choices = [String](choiceData.keys)
                             
@@ -50,9 +59,13 @@ struct MultipleQ: View {
                                     Text(vocab).padding(.all, 20).border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
                                     Spacer()
                                 }.padding(.leading, 20).onTapGesture {
-                                    let resultData = Result(id: vocab, quetion: answerVocab.word, correctAnswer: vocabRepo.getYaku(word: answerVocab, unitNum: unit), userAnswer: vocab, seikai: choiceData[vocab] ?? true, choices: choices)
+                                    let resultData = Result(id: vocab, num: answerVocab.number, quetion: answerVocab.word, correctAnswer: vocabRepo.getYaku(word: answerVocab, unitNum: unit), userAnswer: vocab, seikai: choiceData[vocab] ?? true, choices: choices)
                                     results.append(resultData)
                                     questionNumber+=1
+                                    if questionNumber+1 == totalQNum{
+                                        saveWrongVocabs(results: results)
+                                        isShowingResult.toggle()
+                                    }
                                     //print(resultData)
                                 }
                             }
@@ -62,6 +75,8 @@ struct MultipleQ: View {
             }
         }.navigationViewStyle(StackNavigationViewStyle())
     }
+    
+    
     
     func getChoices(choicesTotal: Int, correctVocab: Vocab, vocabList: [Vocab]) -> [String : Bool] {
         var choices = [String : Bool]()
@@ -83,6 +98,24 @@ struct MultipleQ: View {
         
         return choices
     }
+    
+    func saveWrongVocabs(results: [Result]) {
+        var numList = ""
+        
+        for i in 0..<results.count{
+            if !results[i].seikai {
+                if numList.isEmpty{
+                    numList.append(String(results[i].num))
+                }else{
+                    //numList.append(", ")
+                    numList.append(", "+String(results[i].num))
+                }
+            }
+        }
+        
+        vocabRepo.updateUserVocabData(unit: unit, nums: numList)
+    }
+    
 }
 
 //struct MultipleQ_Previews: PreviewProvider {

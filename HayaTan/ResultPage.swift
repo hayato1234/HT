@@ -15,7 +15,28 @@ struct ResultPage: View {
         VStack{
             Text("correct: "+String(countCorrect()))
             Text("wrong: "+String(countWrong()))
-        }
+            List{
+                ForEach(results){ result in
+                    HStack{
+                        if result.seikai {
+                            Image(systemName: "circle")
+                            Text(result.quetion).bold().foregroundColor(.green)
+                        } else{
+                            Image(systemName: "multiply")
+                            Text(result.quetion).bold().foregroundColor(.red)
+                        }
+                        
+                        Spacer()
+                        VStack{
+                            if !result.seikai{
+                                Text(result.userAnswer).strikethrough()
+                            }
+                            Text(result.correctAnswer).border(Color.red)
+                        }
+                    }
+                }
+            }
+        }.padding(20)
     }
     
     func countCorrect() -> Int {
@@ -38,8 +59,8 @@ struct ResultPage: View {
     }
 }
 
-//struct ResultPage_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ResultPage(isShowingResult: .constant(true),)
-//    }
-//}
+struct ResultPage_Previews: PreviewProvider {
+    static var previews: some View {
+        ResultPage(isShowingResult: .constant(true), results: [Result(id: "a", num: 1, quetion: "approximatley", correctAnswer: "およそ", userAnswer: "およそ", seikai: true, choices: ["およそ","ピッタリ"]),Result(id: "b", num: 2, quetion: "fold", correctAnswer: "をたたむ", userAnswer: "およそ", seikai: false, choices: ["およそ","ピッタリ"])])
+    }
+}

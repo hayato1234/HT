@@ -111,6 +111,13 @@ struct UnitHome: View {
 //                        Text("Upload")
 //                    }) // don't forget to change database name
 //                    Text("count is "+String(currentVocabs.count))
+                    
+                    Button(action: {
+                        vocabRepo.updateVocab(field: "sentence", value: "The new efficient software helped the company to reduce [approximately] $240,000 in the expenses.")
+                    }, label: {
+                        Text("update")
+                    }) // don't forget to change database name
+                    
                 
                     HStack{
                         Text("Mode 必須")
@@ -118,10 +125,18 @@ struct UnitHome: View {
                  
                     List{
                         ForEach(sortedByNumVocabs){ vocab in
-                            HStack{
-                                Text(String(vocab.number))
-                                Text(vocab.word)
-                            }
+                            
+//                            NavigationLink(
+//                                destination: UnitHome(unit.unitName, unit.id, vocabRepo),
+//                                label: {
+//                                    Text(unit.unitName)
+//                                })
+                            NavigationLink(destination: VocabDetailView(vocab: vocab,vocabRepo: vocabRepo),label:{
+                                HStack{
+                                    Text(String(vocab.number))
+                                    Text(vocab.word)
+                                }
+                            })
                         }
                     }
                 }.navigationBarTitle(unitTitle,displayMode: .inline)

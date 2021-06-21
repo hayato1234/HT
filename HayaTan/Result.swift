@@ -9,7 +9,7 @@ import Foundation
 
 struct Result:Identifiable {
     var id: String
-    
+    let num: Int
     let quetion: String
     let correctAnswer: String
     let userAnswer: String

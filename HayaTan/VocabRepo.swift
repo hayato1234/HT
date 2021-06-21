@@ -10,8 +10,10 @@ import Firebase
 
 class VocabRepo: ObservableObject {
     private let db = Firestore.firestore()
+    private let USER_DB = "user_data"
     
     @Published var units: [Unit] = []
+    @Published var missedVocabs: [String] = []
     
     var vocabs0: [Vocab] = []
     var vocabs1: [Vocab] = []
@@ -29,7 +31,7 @@ class VocabRepo: ObservableObject {
             Unit(id: 3, unitName: "Unit 3", dbName: "super_vocabs_3",vocabData: vocabs3),
             Unit(id: 4, unitName: "Unit 4", dbName: "super_vocabs_4",vocabData: vocabs4),
             Unit(id: 5, unitName: "Unit 5", dbName: "super_vocabs_5",vocabData: vocabs5)]
-        
+        //missedVocabs = []
         loadAll()
     }
     
@@ -47,6 +49,57 @@ class VocabRepo: ObservableObject {
             "prep": vocab.prep,
             "conn": vocab.conn
         ])
+    }
+    
+    func updateVocab(field: String, value: String) {
+        db.collection(units[0].dbName).document("0VfOGj6cCSqmxk2a0lV0").updateData([field:value]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+    }
+    
+    func updateUserVocabData(unit: Int, nums: String) {
+        
+//        if let user = Auth.auth().currentUser {
+//            db.collection(USER_DB).document(user.uid).setData([String(unit):nums], merge: true){ err in
+//                if let err = err {
+//                    print("Error updating user vocab data: \(err)")
+//                } else {
+//                    print("Document successfully updated")
+//                }
+//            }
+//        }
+        let list = getMissedVocabList(unit: 5)
+        if list.isEmpty {
+            print("repot/updateuvd/ empty")
+        }else{
+            print("repot/updateuvd/ \(list)")
+        }
+        
+        //これがタイミング的にエンプティーになってしまう。シンクじゃない状態。
+    }
+    
+    func getMissedVocabList(unit: Int) -> String{
+        var mv = ""
+        if let user = Auth.auth().currentUser {
+        
+            db.collection(USER_DB).document(user.uid).getDocument{ (document, error) in
+                    if let document = document, document.exists {
+                        if let missedVocabs = document.data()?[String(unit)] as? String{
+                            print("Document data: \(missedVocabs)")
+                            mv = missedVocabs
+                        }
+                    } else {
+                        print("repo/missed/Document does not exist")
+                    }
+            }
+            //query.getDocument(completion: <#T##FIRDocumentSnapshotBlock##FIRDocumentSnapshotBlock##(DocumentSnapshot?, Error?) -> Void#>)
+        }
+        return mv
+        
     }
     
     func getYaku(word: Vocab, unitNum: Int) -> String {
