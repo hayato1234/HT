@@ -61,31 +61,79 @@ class VocabRepo: ObservableObject {
         }
     }
     
-    func updateUserVocabData(unit: Int, nums: String) {
+    func updateUserVocabData(unit: Int, results: [Result]) {
         
-//        if let user = Auth.auth().currentUser {
-//            db.collection(USER_DB).document(user.uid).setData([String(unit):nums], merge: true){ err in
-//                if let err = err {
-//                    print("Error updating user vocab data: \(err)")
-//                } else {
-//                    print("Document successfully updated")
-//                }
-//            }
-//        }
-        let list = getMissedVocabList(unit: 5)
-        if list.isEmpty {
-            print("repot/updateuvd/ empty")
-        }else{
-            print("repot/updateuvd/ \(list)")
+        if let user = Auth.auth().currentUser {
+            db.collection(USER_DB).document(user.uid).getDocument{ (document, error) in
+                if let document = document, document.exists {
+                    // data for this unit already exist
+                    if let missedVocabs = document.data()?[String(unit)] as? String{
+                        print("Document data 1: \(missedVocabs)")
+                        var numList = missedVocabs.components(separatedBy: ", ")
+                        
+                        for i in 0..<results.count{
+                            
+                            let result = results[i]
+                            let numString = String(result.num)
+                            
+                            if result.seikai {
+                                if numList.contains(numString){
+                                    //delete from list
+                                    if let removeIndex = numList.firstIndex(of: numString) {
+                                        print("Document removing data : \(numList[removeIndex])")
+                                        numList.remove(at: removeIndex)
+                                    }
+                                }
+                            }else{
+                                // got wrong -> add if doesn't exist
+                                if !numList.contains(numString) {
+                                    numList.append(numString)
+                                }
+                            }
+                        }
+                        
+                        self.db.collection(self.USER_DB).document(user.uid).setData([String(unit):numList.joined(separator: ", ")]){ err in
+                            if let err = err {
+                                print("Error updating user vocab data: \(err)")
+                            } else {
+                                print("Document successfully updated")
+                            }
+                        }
+                    }else {
+                        // data for this unit for this user not exist (= first try)
+                        print("repo/missed/Document does not exist")
+                        var numList = ""
+                        
+                        for i in 0..<results.count{
+                            if !results[i].seikai {
+                                if numList.isEmpty{
+                                    numList.append(String(results[i].num))
+                                }else{
+                                    //numList.append(", ")
+                                    numList.append(", "+String(results[i].num))
+                                }
+                            }
+                        }
+                        self.db.collection(self.USER_DB).document(user.uid).setData([String(unit):numList], merge: true){ err in
+                            if let err = err {
+                                print("Error adding user vocab data: \(err)")
+                            } else {
+                                print("Document successfully added")
+                            }
+                        }
+                    }
+                }
+            }
         }
-        
-        //これがタイミング的にエンプティーになってしまう。シンクじゃない状態。
+    }
+    
+    func stringListToArray(value : String) -> [String] {
+        value.components(separatedBy: ", ")
     }
     
     func getMissedVocabList(unit: Int) -> String{
         var mv = ""
         if let user = Auth.auth().currentUser {
-        
             db.collection(USER_DB).document(user.uid).getDocument{ (document, error) in
                     if let document = document, document.exists {
                         if let missedVocabs = document.data()?[String(unit)] as? String{
@@ -96,7 +144,6 @@ class VocabRepo: ObservableObject {
                         print("repo/missed/Document does not exist")
                     }
             }
-            //query.getDocument(completion: <#T##FIRDocumentSnapshotBlock##FIRDocumentSnapshotBlock##(DocumentSnapshot?, Error?) -> Void#>)
         }
         return mv
         

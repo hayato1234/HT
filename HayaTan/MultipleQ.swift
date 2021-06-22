@@ -100,20 +100,8 @@ struct MultipleQ: View {
     }
     
     func saveWrongVocabs(results: [Result]) {
-        var numList = ""
         
-        for i in 0..<results.count{
-            if !results[i].seikai {
-                if numList.isEmpty{
-                    numList.append(String(results[i].num))
-                }else{
-                    //numList.append(", ")
-                    numList.append(", "+String(results[i].num))
-                }
-            }
-        }
-        
-        vocabRepo.updateUserVocabData(unit: unit, nums: numList)
+        vocabRepo.updateUserVocabData(unit: unit, results: results)
     }
     
 }
