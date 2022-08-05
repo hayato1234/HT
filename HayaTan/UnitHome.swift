@@ -10,41 +10,71 @@ import SwiftUI
 struct UnitHome: View {
     
     @State var isShowingMult = false
+    @State var isShowingWrite = false
+    @State private var isHissuMode = false
     @State private var langSelect = 0
     @State var currentWord = 0
-    var currentVocabs: [Vocab]
-    var sortedByNumVocabs: [Vocab]
+
+    @State var currentVocabs: [Vocab]
+    @State var sortedByNumVocabs: [Vocab]
     var unitTitle: String
     var unit: Int
     var vocabRepo:VocabRepo
-    
+
     var language = ["EN -> 日","日 -> EN"]
 
     init(_ unitTitle: String, _ unit: Int, _ vocabRepo: VocabRepo) {
         self.unitTitle = unitTitle
         self.unit = unit
         self.vocabRepo = vocabRepo
+
         currentVocabs = vocabRepo.units[unit].vocabData.shuffled()
-        sortedByNumVocabs = currentVocabs.sorted(by: {
+        sortedByNumVocabs = vocabRepo.units[unit].vocabData.sorted(by: {
             $0.number < $1.number
         })
+
     }
     
     var body: some View {
         if currentVocabs.count == 0 {
             Text("No data found")
-            
         }else{
             if isShowingMult {
-                MultipleQ(isShowingMult: $isShowingMult, vocabRepo: vocabRepo, unit: unit)
+                MultipleQ(isShowingMult: $isShowingMult, vocabRepo: vocabRepo, sortedVocabs: insertMissedBeginning(), unit: unit)
+            } else if isShowingWrite {
+                WriteQ(isShowingWrite: $isShowingWrite, vocabRepo: vocabRepo, sortedVocabs: insertMissedBeginning(), unit: unit)
             }else{
                 VStack{
+                    HStack{ // for hissu toggle
+                        Spacer()
+                        HStack{
+                            //Spacer()
+                            Text("必須モード")
+                            Toggle("", isOn: $isHissuMode).onChange(of: isHissuMode){ isHissu in
+                                if isHissu {
+                                    currentVocabs = vocabRepo.vocabs1H.shuffled()
+                                    sortedByNumVocabs = vocabRepo.vocabs1H.sorted(by: {
+                                        $0.number < $1.number
+                                    })
+                                    //print("UniHome body: \(sortedByNumVocabs.count)")
+                                } else {
+                                    currentVocabs = vocabRepo.units[unit].vocabData.shuffled()
+                                    sortedByNumVocabs = vocabRepo.units[unit].vocabData.sorted(by: {
+                                        $0.number < $1.number
+                                    })
+                                }
+                            }.labelsHidden()
+                        }
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .stroke(lineWidth: 2)
+                                //.foregroundColor(isSoundOn ? .green : .gray)
+                        )
+                    }
+
                     HStack{
-                        
                         if currentWord == 0 {
                             HStack{
-                                //Image(systemName: "chevron.backward")
-                                
                                 Text(unitTitle).font(.system(size: 30)).fontWeight(.bold).frame(width: 300, height: 300, alignment: .center)
                                 Image(systemName: "circle").background(Color.white).clipShape(Circle())
                             }.background(Color.yellow).offset(x: 20, y: 0)
@@ -62,7 +92,7 @@ struct UnitHome: View {
                                 }.frame(width: 300, height: 300)
                                 Image(systemName: "circle")
                             }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
-                                //print()
+
                                 currentWord-=1
                             }.offset(x: 20, y: 0)
                         }
@@ -74,7 +104,7 @@ struct UnitHome: View {
                             }else{
                                 Text(vocabRepo.getYaku(word: currentVocabs[currentWord], unitNum: unit)).font(.system(size: 25)).fontWeight(.bold).frame(width: 300, height: 300, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             }
-                            
+
                             Image(systemName: "chevron.forward")
                         }.border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).onTapGesture {
                             //print(currentVocabs[0].word+", "+currentVocabs[1].word+", "+currentVocabs[2].word)
@@ -86,51 +116,41 @@ struct UnitHome: View {
                             Text(self.language[$0])
                         }
                     }.pickerStyle(SegmentedPickerStyle()).frame(width: 200).padding()
-                    
-                    Text(String(langSelect))
-                    
+//
+//
                     HStack{
                         Button(action: {isShowingMult.toggle()}, label: {
                             Text("選択")
                         }).font(.system(size: 50)).padding()
-                        Button(action: {isShowingMult.toggle()}, label: {
-                            Text("書き")
+                        Button(action: {isShowingWrite.toggle()}, label: {
+                            Text("書き").strikethrough()
                         }).font(.system(size: 50)).padding()
-                        Button(action: {isShowingMult.toggle()}, label: {
-                            Text("テスト")
+                        Button(action: {}, label: {
+                            Text("テスト").strikethrough()
                         }).font(.system(size: 50)).padding()
-                        Button(action: {isShowingMult.toggle()}, label: {
-                            Text("集中")
+                        Button(action: {}, label: {
+                            Text("集中").strikethrough()
                         }).font(.system(size: 50)).padding()
                         //品詞別
                     }
-                    
-//                    Button(action: {
-//                        initLoad()
-//                    }, label: {
-//                        Text("Upload")
-//                    }) // don't forget to change database name
-//                    Text("count is "+String(currentVocabs.count))
-                    
-                    Button(action: {
-                        vocabRepo.updateVocab(field: "sentence", value: "The new efficient software helped the company to reduce [approximately] $240,000 in the expenses.")
-                    }, label: {
-                        Text("update")
-                    }) // don't forget to change database name
-                    
-                
-                    HStack{
-                        Text("Mode 必須")
-                    }
-                 
+//
+//////                    Button(action: {  // for uploadling vocab list
+//////                        initLoad()
+//////                    }, label: {
+//////                        Text("Upload")
+//////                    }) // don't forget to change database name
+//////                    Text("count is "+String(currentVocabs.count))
+////
+//////                    Button(action: {  // for uploading example sentence
+//////                        vocabRepo.updateVocab(field: "sentence", value: "The new efficient software helped the company to reduce [approximately] $240,000 in the expenses.")
+//////                    }, label: {
+//////                        Text("update")
+//////                    }) // don't forget to change database name
+////
+//
                     List{
                         ForEach(sortedByNumVocabs){ vocab in
-                            
-//                            NavigationLink(
-//                                destination: UnitHome(unit.unitName, unit.id, vocabRepo),
-//                                label: {
-//                                    Text(unit.unitName)
-//                                })
+
                             NavigationLink(destination: VocabDetailView(vocab: vocab,vocabRepo: vocabRepo),label:{
                                 HStack{
                                     Text(String(vocab.number))
@@ -168,6 +188,26 @@ struct UnitHome: View {
         }else{
             print("file not found")
         }
+    }
+
+    func insertMissedBeginning() -> [Vocab] {
+        var randomVocabs = vocabRepo.units[unit].vocabData.shuffled()
+        let missedString = vocabRepo.userMissedVocabs[unit]
+        //print("home1 \(missedString)")
+        let missedArray = vocabRepo.stringListToArray(value: missedString)
+        //print("home2 \(missedArray)")
+        var count = 0
+        for missed in missedArray{
+            if let index = randomVocabs.firstIndex(where: {String($0.number) == missed}){
+                let removedVocab = randomVocabs.remove(at: index)
+                randomVocabs.insert(removedVocab, at: count)
+                //print("mulQinsert \(newRdmVocab[count].number)")
+                count+=1
+            }
+        }
+        count = 0
+
+        return randomVocabs
     }
 
     func createVocab(vocabData: [String: Any]) -> Vocab? {

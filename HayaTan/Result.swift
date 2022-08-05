@@ -10,9 +10,10 @@ import Foundation
 struct Result:Identifiable {
     var id: String
     let num: Int
-    let quetion: String
+    let question: String
     let correctAnswer: String
     let userAnswer: String
     let seikai: Bool
     let choices: [String]
+    
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ResultPage: View {
     @Binding var isShowingResult: Bool
-    var results: [Result]
+    @Binding var results: [Result]
     
     var body: some View {
         VStack{
@@ -20,10 +20,10 @@ struct ResultPage: View {
                     HStack{
                         if result.seikai {
                             Image(systemName: "circle")
-                            Text(result.quetion).bold().foregroundColor(.green)
+                            Text(result.question).bold().foregroundColor(.green)
                         } else{
                             Image(systemName: "multiply")
-                            Text(result.quetion).bold().foregroundColor(.red)
+                            Text(result.question).bold().foregroundColor(.red)
                         }
                         
                         Spacer()
@@ -36,6 +36,9 @@ struct ResultPage: View {
                     }
                 }
             }
+            Button(action: {
+                    results.removeAll()
+                    self.isShowingResult = false}, label: {Text("もう一度")})
         }.padding(20)
     }
     
@@ -59,8 +62,8 @@ struct ResultPage: View {
     }
 }
 
-struct ResultPage_Previews: PreviewProvider {
-    static var previews: some View {
-        ResultPage(isShowingResult: .constant(true), results: [Result(id: "a", num: 1, quetion: "approximatley", correctAnswer: "およそ", userAnswer: "およそ", seikai: true, choices: ["およそ","ピッタリ"]),Result(id: "b", num: 2, quetion: "fold", correctAnswer: "をたたむ", userAnswer: "およそ", seikai: false, choices: ["およそ","ピッタリ"])])
-    }
-}
+//struct ResultPage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ResultPage(isShowingResult: .constant(true), results: [Result(id: "a", num: 1, quetion: "approximatley", correctAnswer: "およそ", userAnswer: "およそ", seikai: true, choices: ["およそ","ピッタリ"]),Result(id: "b", num: 2, quetion: "fold", correctAnswer: "をたたむ", userAnswer: "およそ", seikai: false, choices: ["およそ","ピッタリ"])])
+//    }
+//}

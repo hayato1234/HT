@@ -33,47 +33,16 @@ struct ContentView: View {
 }
 
 struct HomeScreen: View {
-//    @Environment(\.managedObjectContext) private var viewContext
-//    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \VocabCD.id, ascending: false)]) private var localVocab: FetchedResults<VocabCD>
     @ObservedObject var vocabRepo:VocabRepo = VocabRepo()
     
-    
-//    init() {
-////        if localVocab.isEmpty{
-////            vocabRepo = VocabRepo()
-////            print("trying initial load")
-////            for unit in vocabRepo.units {
-////                for vocab in unit.vocabData {
-////                    let addVocab = VocabCD(context: viewContext)
-////                    addVocab.id = vocab.id
-////                    addVocab.unit = Int16(vocab.unit)
-////                    addVocab.number = Int16(vocab.number)
-////                    addVocab.word = vocab.word
-////                    addVocab.parts = vocab.parts
-////                    addVocab.noun = vocab.noun
-////                    addVocab.itverb = vocab.itverb
-////                    addVocab.tverb = vocab.tverb
-////                    addVocab.adj = vocab.adj
-////                    addVocab.prep = vocab.prep
-////                    addVocab.conn = vocab.conn
-////                    do{
-////                        try viewContext.save()
-////                    }catch{
-////                        let error = error as NSError
-////                        fatalError("ConView: \(error)")
-////                    }
-////                }
-////            }
-////        }
-////        print(localVocab.count)
-//
-//    }
-    
     var body: some View {
+        
         NavigationView{
             List(vocabRepo.units, id:\.id){ (unit) in
+//                Text(String(vocabRepo.units[0].vocabData.count))
                 NavigationLink(
                     destination: UnitHome(unit.unitName, unit.id, vocabRepo),
+//                    destination: UnitHome(),
                     label: {
                         Text(unit.unitName)
                     })

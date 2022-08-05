@@ -16,6 +16,7 @@
 		F030BC0A26124C4200661C1C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F030BC0826124C4200661C1C /* LaunchScreen.storyboard */; };
 		F030BC1326124C9700661C1C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F030BC1226124C9700661C1C /* GoogleService-Info.plist */; };
 		F06CAED8265C876900A0D649 /* VocabDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06CAED7265C876900A0D649 /* VocabDetailView.swift */; };
+		F0A9C025289DCC2000CFA1EB /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = F0A9C024289DCC2000CFA1EB /* .gitignore */; };
 		F0E1DE3E2613F75100C6D504 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE3D2613F75100C6D504 /* Unit.swift */; };
 		F0E1DE45261400A600C6D504 /* UnitHome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE44261400A600C6D504 /* UnitHome.swift */; };
 		F0E1DE482614EFCB00C6D504 /* MultipleQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */; };
@@ -23,6 +24,8 @@
 		F0E1DE4E26155D3600C6D504 /* Vocab.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE4D26155D3600C6D504 /* Vocab.swift */; };
 		F0E1DE542617E82800C6D504 /* ResultPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE532617E82800C6D504 /* ResultPage.swift */; };
 		F0E1DE572617E84300C6D504 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1DE562617E84300C6D504 /* Result.swift */; };
+		F0E3D0EC2711244F00CCBA88 /* WriteQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E3D0EB2711244F00CCBA88 /* WriteQ.swift */; };
+		F0E3D0EE2720F69E00CCBA88 /* WResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E3D0ED2720F69E00CCBA88 /* WResult.swift */; };
 		F0F2CA1A2633328D0058C651 /* VocabLocalData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F0F2CA182633328D0058C651 /* VocabLocalData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +43,7 @@
 		F030BC0B26124C4200661C1C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F030BC1226124C9700661C1C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F06CAED7265C876900A0D649 /* VocabDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VocabDetailView.swift; sourceTree = "<group>"; };
+		F0A9C024289DCC2000CFA1EB /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		F0E1DE3D2613F75100C6D504 /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		F0E1DE44261400A600C6D504 /* UnitHome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitHome.swift; sourceTree = "<group>"; };
 		F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleQ.swift; sourceTree = "<group>"; };
@@ -47,6 +51,8 @@
 		F0E1DE4D26155D3600C6D504 /* Vocab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vocab.swift; sourceTree = "<group>"; };
 		F0E1DE532617E82800C6D504 /* ResultPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultPage.swift; sourceTree = "<group>"; };
 		F0E1DE562617E84300C6D504 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		F0E3D0EB2711244F00CCBA88 /* WriteQ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteQ.swift; sourceTree = "<group>"; };
+		F0E3D0ED2720F69E00CCBA88 /* WResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WResult.swift; sourceTree = "<group>"; };
 		F0F2CA192633328D0058C651 /* VocabDB.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VocabDB.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +88,7 @@
 		F030BBF126124C4100661C1C = {
 			isa = PBXGroup;
 			children = (
+				F0A9C024289DCC2000CFA1EB /* .gitignore */,
 				F030BBFC26124C4100661C1C /* HayaTan */,
 				F030BBFB26124C4100661C1C /* Products */,
 				C87BC8D997442954D63CA147 /* Pods */,
@@ -108,10 +115,12 @@
 				F0F2CA182633328D0058C651 /* VocabLocalData.xcdatamodeld */,
 				F0E1DE4D26155D3600C6D504 /* Vocab.swift */,
 				F0E1DE472614EFCB00C6D504 /* MultipleQ.swift */,
+				F0E3D0EB2711244F00CCBA88 /* WriteQ.swift */,
 				F0E1DE3D2613F75100C6D504 /* Unit.swift */,
 				F0E1DE4A26154CDC00C6D504 /* VocabRepo.swift */,
 				F0E1DE532617E82800C6D504 /* ResultPage.swift */,
 				F0E1DE562617E84300C6D504 /* Result.swift */,
+				F0E3D0ED2720F69E00CCBA88 /* WResult.swift */,
 				F030BC0326124C4200661C1C /* Assets.xcassets */,
 				F030BC0826124C4200661C1C /* LaunchScreen.storyboard */,
 				F030BC0B26124C4200661C1C /* Info.plist */,
@@ -189,6 +198,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0A9C025289DCC2000CFA1EB /* .gitignore in Resources */,
 				F030BC0A26124C4200661C1C /* LaunchScreen.storyboard in Resources */,
 				F030BC1326124C9700661C1C /* GoogleService-Info.plist in Resources */,
 				F030BC0726124C4200661C1C /* Preview Assets.xcassets in Resources */,
@@ -270,10 +280,12 @@
 				F06CAED8265C876900A0D649 /* VocabDetailView.swift in Sources */,
 				F0E1DE45261400A600C6D504 /* UnitHome.swift in Sources */,
 				F030BC0026124C4100661C1C /* SceneDelegate.swift in Sources */,
+				F0E3D0EE2720F69E00CCBA88 /* WResult.swift in Sources */,
 				F0E1DE572617E84300C6D504 /* Result.swift in Sources */,
 				F030BC0226124C4100661C1C /* ContentView.swift in Sources */,
 				F0E1DE542617E82800C6D504 /* ResultPage.swift in Sources */,
 				F0E1DE482614EFCB00C6D504 /* MultipleQ.swift in Sources */,
+				F0E3D0EC2711244F00CCBA88 /* WriteQ.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

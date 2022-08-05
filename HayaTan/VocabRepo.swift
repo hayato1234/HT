@@ -11,17 +11,24 @@ import Firebase
 class VocabRepo: ObservableObject {
     private let db = Firestore.firestore()
     private let USER_DB = "user_data"
+    private let V_INFO_DB = "vocab_info"
+    private let HISSU_ID_DB = "hissu_ids"
     
     @Published var units: [Unit] = []
-    @Published var missedVocabs: [String] = []
     
     var vocabs0: [Vocab] = []
     var vocabs1: [Vocab] = []
+    var vocabs1H: [Vocab] =  []
     var vocabs2: [Vocab] = []
+    var vocabs2H: [Vocab] =  []
     var vocabs3: [Vocab] = []
+    var vocabs3H: [Vocab] =  []
     var vocabs4: [Vocab] = []
+    var vocabs4H: [Vocab] =  []
     var vocabs5: [Vocab] = []
-    
+    var vocabs5H: [Vocab] =  []
+    var userMissedVocabs: [String] = ["","","","","",""] // to store missed vocab list (index = unit)
+    var hissuVocabList: [String]  = ["","","","","",""]  // to store hissu tango ( [index+1] = unit)
     
     init() {
         units = [
@@ -31,7 +38,6 @@ class VocabRepo: ObservableObject {
             Unit(id: 3, unitName: "Unit 3", dbName: "super_vocabs_3",vocabData: vocabs3),
             Unit(id: 4, unitName: "Unit 4", dbName: "super_vocabs_4",vocabData: vocabs4),
             Unit(id: 5, unitName: "Unit 5", dbName: "super_vocabs_5",vocabData: vocabs5)]
-        //missedVocabs = []
         loadAll()
     }
     
@@ -60,6 +66,10 @@ class VocabRepo: ObservableObject {
             }
         }
     }
+ 
+    
+    // issue:  missed data sometimes get deleted for other units when updated (first update for the unit doesnot?)
+    
     
     func updateUserVocabData(unit: Int, results: [Result]) {
         
@@ -69,7 +79,7 @@ class VocabRepo: ObservableObject {
                     // data for this unit already exist
                     if let missedVocabs = document.data()?[String(unit)] as? String{
                         print("Document data 1: \(missedVocabs)")
-                        var numList = missedVocabs.components(separatedBy: ", ")
+                        var numList = self.stringListToArray(value: missedVocabs)
                         
                         for i in 0..<results.count{
                             
@@ -82,12 +92,24 @@ class VocabRepo: ObservableObject {
                                     if let removeIndex = numList.firstIndex(of: numString) {
                                         print("Document removing data : \(numList[removeIndex])")
                                         numList.remove(at: removeIndex)
+                                        var stringList = self.stringListToArray(value: self.userMissedVocabs[unit])
+                                        if let removeIndex = stringList.firstIndex(of: numString){
+                                            stringList.remove(at: removeIndex)
+                                        }
+                                        self.userMissedVocabs[unit] = stringList.joined(separator: ", ")
                                     }
                                 }
                             }else{
                                 // got wrong -> add if doesn't exist
+                                print("Repo update1: \(numString)")
                                 if !numList.contains(numString) {
                                     numList.append(numString)
+                                    if self.userMissedVocabs[unit].count == 0 {
+                                        self.userMissedVocabs[unit].append(numString)
+                                    } else{
+                                        self.userMissedVocabs[unit].append(", "+numString)
+                                    }
+                                    print("Repo update2: \(numString)")
                                 }
                             }
                         }
@@ -100,18 +122,27 @@ class VocabRepo: ObservableObject {
                             }
                         }
                     }else {
-                        // data for this unit for this user not exist (= first try)
+                        // data for this unit for this user not exist (= no mistake at this time)
                         print("repo/missed/Document does not exist")
                         var numList = ""
                         
                         for i in 0..<results.count{
                             if !results[i].seikai {
+                                //update for firestore
+                                let missedVocabNumber = String(results[i].num)
                                 if numList.isEmpty{
-                                    numList.append(String(results[i].num))
+                                    numList.append(missedVocabNumber)
                                 }else{
-                                    //numList.append(", ")
-                                    numList.append(", "+String(results[i].num))
+                                    numList.append(", "+missedVocabNumber)
                                 }
+                                
+                                // update for temp. local file
+                                if self.userMissedVocabs[unit].count == 0 {
+                                    self.userMissedVocabs[unit].append(missedVocabNumber)
+                                } else{
+                                    self.userMissedVocabs[unit].append(", "+missedVocabNumber)
+                                }
+                                
                             }
                         }
                         self.db.collection(self.USER_DB).document(user.uid).setData([String(unit):numList], merge: true){ err in
@@ -131,22 +162,54 @@ class VocabRepo: ObservableObject {
         value.components(separatedBy: ", ")
     }
     
-    func getMissedVocabList(unit: Int) -> String{
-        var mv = ""
+    // call this method every time and update?
+    func getMissedVocabList() {
         if let user = Auth.auth().currentUser {
             db.collection(USER_DB).document(user.uid).getDocument{ (document, error) in
                     if let document = document, document.exists {
-                        if let missedVocabs = document.data()?[String(unit)] as? String{
-                            print("Document data: \(missedVocabs)")
-                            mv = missedVocabs
+                        for i in 0..<6  {
+                            if let missedVocabs = document.data()?[String(i)] as? String{
+                                ///print("Repo, getmissed: \(missedVocabs)")
+                                self.userMissedVocabs[i] = missedVocabs
+                            }
                         }
                     } else {
                         print("repo/missed/Document does not exist")
                     }
             }
         }
-        return mv
-        
+    }
+    
+    func loadHissuVocabList() {
+        let docRef = db.collection(V_INFO_DB).document(HISSU_ID_DB)
+        docRef.getDocument{(document, erro) in
+            if let document = document, document.exists {
+                for i in 0..<5 {
+                    if let unitHissuIds = document.data()?[self.units[i+1].unitName] as? String{
+                        //self.hissuVocabList[i] = unitHissuIds
+                        let arrayHissu = unitHissuIds.components(separatedBy: ",")
+                        
+                        if i == 0 {    // make this for unit 2~5 (editing Unit Class?)
+                            self.vocabs1H = self.units[i+1].vocabData.filter{ hissu in  // units[i+1] bc no hissu on unit0
+                                return arrayHissu.contains(String(hissu.number))
+                            }
+                            
+                            //print("Repo-loadhissu: \(self.vocabs1H.count)")
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    func getHissuArray(unit: Int) -> [Int] {
+        //let arrayHissu = hissuVocabList[unit].components(separatedBy: ",")
+        let arrayHissu = hissuVocabList[unit].compactMap{
+            $0.wholeNumberValue
+        }
+        //print("Repo-gethissu: \(hissuVocabList[unit])")
+        return arrayHissu
     }
     
     func getYaku(word: Vocab, unitNum: Int) -> String {
@@ -154,7 +217,7 @@ class VocabRepo: ObservableObject {
         if !word.noun.isEmpty  {
             yaku.append("名："+word.noun)
         }
-        if unitNum == 0 {
+        if unitNum == 0 { // if unit 0 then no diff. between itverb and tverb
             if !word.itverb.isEmpty {
                 if yaku.count > 0 {
                     yaku.append("\n動："+word.itverb)
@@ -174,7 +237,7 @@ class VocabRepo: ObservableObject {
                     yaku.append("動："+word.tverb)
                 }
             }
-        }else{
+        }else{ // if unit 1~5, then itverb and tverb separete
             if !word.itverb.isEmpty {
                 if yaku.count > 0 {
                     yaku.append("\n自動："+word.itverb)
@@ -225,24 +288,81 @@ class VocabRepo: ObservableObject {
         return yaku
     }
     
-    private func loadAll(){
+    //return answers (each part) for WriteQ
+    func getWriteAnswers(word: Vocab, unit: Int) -> [String:String] {
+        var answers = [String:String]()
         
+        if !word.noun.isEmpty {
+            answers["名"] = word.noun
+        }
+        
+        // for verbs
+        if unit == 0 { // if unit 0 then no diff. between itverb and tverb
+            if !word.itverb.isEmpty {
+                if !word.tverb.isEmpty {
+                    answers["動"] = word.itverb+","+word.tverb
+                }else{
+                    answers["動"] = word.itverb
+                }
+            } else{
+                if !word.tverb.isEmpty {
+                    answers["動"] = word.tverb
+                }
+            }
+        } else { // if unit 1~5, then itverb and tverb separete
+            if !word.itverb.isEmpty {
+                answers["自動"] = word.itverb
+            }
+            if !word.tverb.isEmpty {
+                answers["他動"] = word.tverb
+            }
+        }
+        
+        if !word.adj.isEmpty {
+            answers["形"] = word.adj
+        }
+        
+        if !word.adv.isEmpty {
+            answers["副"] = word.adv
+        }
+        
+        if !word.prep.isEmpty {
+            answers["前"] = word.prep
+        }
+        
+        if !word.conn.isEmpty {
+            answers["接"] = word.conn
+        }
+        
+        return answers
+    }
+    
+    private func loadAll(){
+        loadHissuVocabList()
+        getMissedVocabList()
         if let context = (UIApplication.shared.delegate as? AppDelegate)?.persistentContainer.viewContext {
             if let vocabCoreData = try? context.fetch(VocabCD.fetchRequest()) {
                 if let vocabs = vocabCoreData as? [VocabCD]{
                     if vocabs.count == 0 {
                         // load from Firebase
+//                        db.collection(units[0].dbName).getDocuments{ (snapshot, error) in
+//                            if let error = error{
+//                                print("VRepo: error lading from firebase: \(error)")
+//                                return
+//                            }
+//                            guard let documents1 = snapshot?.documents else {print("error at snapshot");return}
+//                        }
                         print("Repo: loading from Firebase")
                         for i in 0..<6 {
                             db.collection(units[i].dbName).getDocuments{ (snapshot, error) in
                                 if let error = error{
-                                    print(error)
+                                    print("VRepo: error lading from firebase: \(error)")
                                     return
                                 }
                                 guard let documents = snapshot?.documents else {print("error at snapshot");return}
                                 self.units[i].vocabData = documents.compactMap{document in
                                     let data = document.data()
-                                    //print(data)
+//                                    print(data)
 
                                     let vocabToSave = VocabCD(context: context)
 //                                    if let id = data["id"] as? String{
@@ -282,6 +402,8 @@ class VocabRepo: ObservableObject {
                                     if let conn = data["conn"] as? String {
                                         vocabToSave.conn = conn
                                     }
+                                    
+                                    
                                     (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
                                     guard let unit = data["unit"] as? Int,
                                           let number = data["number"] as? Int,
@@ -294,9 +416,11 @@ class VocabRepo: ObservableObject {
                                           let adv = data["adv"] as? String,
                                           let prep = data["prep"] as? String,
                                           let conn = data["conn"] as? String else {return nil}
+                                    
                                     return Vocab(id: document.documentID, unit: unit, number: number, word: word, parts: parts, noun: noun, itverb: itverb, tverb: tverb, adj: adj, adv: adv, prep: prep, conn: conn)
                                 }
                             }
+                            print(units[i].vocabData[0].word)
                         }
                     }else{
                         //load from Core Data
@@ -318,6 +442,7 @@ class VocabRepo: ObservableObject {
                                         }
                                     }
                                 }
+                                
                             }else{
                                 print("repo loadall: not possible")
                             }
@@ -326,6 +451,7 @@ class VocabRepo: ObservableObject {
                     }
                     
                 }
+                
             }
         }
     }
@@ -342,12 +468,6 @@ class VocabRepo: ObservableObject {
     
     func vocabTypeConverter(v: VocabCD) -> Vocab? {
         
-        //return Vocab(id: "", unit: 1, number: 1, word: "word", parts: "parts", noun: "noun", itverb: "itverb", tverb: "tverb", adj: "adj", adv: "adv", prep: "prep", conn: "conn")
-//        if let id = v.id,
-//           let word = v.word,
-//           let parts = v.parts{
-//            return Vocab(id: id, unit: Int(v.unit), number: Int(v.number), word: word, parts: parts, noun: "noun", itverb: "itverb", tverb: "tverb", adj: "adj", adv: "adv", prep: "prep", conn: "conn")
-//        }
         if let id = v.id,
            let word = v.word,
            let parts = v.parts,
